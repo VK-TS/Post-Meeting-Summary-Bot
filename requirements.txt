@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+vosk
+pydub
+audioop-lts
+requests
+python-dotenv
+pyannote.audio

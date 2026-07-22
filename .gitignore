@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+uploads/*
+normalized/*
+segments/*
+!uploads/.gitkeep
+!normalized/.gitkeep
+!segments/.gitkeep
+
+frontend/node_modules/
+frontend/dist/
+frontend/.env

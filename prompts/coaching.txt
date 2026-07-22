@@ -1,0 +1,1 @@
+taking the following transcript from {speaker}, give advice to improve this speaker's contributions: {transcript}
