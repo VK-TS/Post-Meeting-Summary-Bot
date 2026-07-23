@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 const MAX_POLLS = 3600
 
 function App() {
