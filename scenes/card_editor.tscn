@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://d1lrm67hwvkc"]
+
+[ext_resource type="Script" path="res://scripts/card_editor.gd" id="1_x4kwv"]
+
+[node name="CardEditor" type="PanelContainer"]
+script = ExtResource("1_x4kwv")
+
+[node name="CardDisplay" type="Control"]
+layout_mode = 2

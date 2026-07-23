@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bua8614l1tu2"]
+
+[ext_resource type="Script" uid="uid://6ipx8aye4puh" path="res://scripts/bullet.gd" id="1_bullet"]
+
+[node name="Bullet" type="Area2D" unique_id=1609044775]
+collision_layer = 4
+script = ExtResource("1_bullet")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1088017313]

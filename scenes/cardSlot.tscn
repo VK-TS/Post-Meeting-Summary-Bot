@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://fs4tskae14w8"]
+
+[ext_resource type="Script" uid="uid://be1rn5vh7lefa" path="res://scripts/card_slot.gd" id="1_fe304"]
+
+[node name="CardSlot" type="PanelContainer" unique_id=1373415796]
+script = ExtResource("1_fe304")

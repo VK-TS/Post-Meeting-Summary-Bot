@@ -1,0 +1,373 @@
+Card Editing System Redesign Proposal
+Current Issues and Proposed Solution
+Project
+
+Bullet Card Roguelike (Godot 4)
+
+Purpose
+
+This document outlines the limitations of the current card editing implementation and proposes a redesigned editing workflow centered around a dedicated Component Preview and Card Editor.
+
+The objective is to create a system that is:
+
+Easier for players to understand
+Easier to maintain
+Easier to expand with future features
+More visually satisfying through direct manipulation of component stickers
+1. Current System
+
+The game currently contains the following systems:
+
+Hand (cards currently available to fire)
+Loadout (12 permanent cards used for reloads)
+Inventory (cards obtained during gameplay)
+Component Inventory
+Card Editor
+
+Components are collected during gameplay and can be applied to cards to modify their behaviour.
+
+The original implementation attempted to allow components to be dragged directly from the inventory onto cards.
+
+2. Current Problems
+2.1 Multiple Responsibilities for Cards
+
+Inventory and Loadout cards currently serve several unrelated purposes simultaneously.
+
+A card is expected to:
+
+Display card information
+Be selectable
+Open the editor
+Accept dropped components
+Participate in swapping between inventory and loadout
+
+As a result, each card has become both a display element and an editing tool.
+
+This greatly complicates both the code and the player interaction.
+
+2.2 Too Many Drag-and-Drop Targets
+
+Under the original design, every card in the Inventory and Loadout potentially becomes a drop target.
+
+Loadout
+
+Card
+Card
+Card
+Card
+...
+
+Inventory
+
+Card
+Card
+Card
+Card
+...
+
+Each card must implement:
+
+Drop validation
+Component application
+UI refresh
+Selection state
+
+As the number of cards increases, so does the number of interactive UI elements.
+
+2.3 Component Inventory Has Little Purpose
+
+Currently the Component Inventory functions primarily as storage.
+
+Players immediately drag components from it onto cards.
+
+This provides little opportunity to inspect:
+
+Component name
+Description
+Statistics
+Rarity
+Sticker artwork
+
+The player is encouraged to use components without understanding them.
+
+2.4 Editing Logic is Distributed
+
+Editing behaviour is spread across multiple scripts.
+
+Responsibilities are split between:
+
+Main.gd
+CardSlot.gd
+ComponentSlot.gd
+Player.gd
+
+This creates unnecessary coupling and has already resulted in issues such as:
+
+signal mismatches
+setup() argument mismatches
+inconsistent card rendering
+drag-and-drop failures
+2.5 Components Lack Visual Placement
+
+Currently a card simply stores
+
+components = [
+    "explosive",
+    "poison"
+]
+
+Although this records which upgrades are attached, it contains no information regarding where those upgrades appear visually on the card.
+
+The intended "sticker" system therefore cannot be implemented.
+
+3. Design Goals
+
+The redesigned editor should satisfy the following objectives:
+
+Cards remain simple objects whose primary purpose is storage and display.
+Components should be inspectable before application.
+Component placement should feel tactile and intentional.
+Editing should occur in one dedicated workspace.
+Future functionality should be easy to add.
+4. Proposed Architecture
+
+Instead of dragging directly from the Component Inventory onto cards, editing will occur in two stages.
+
+The player selects a component.
+The selected component opens inside a dedicated Component Preview.
+The sticker shown in the preview is dragged onto the card currently displayed in the Card Editor.
+
+The workflow becomes:
+
+Component Inventory
+
+Click Component
+
+        │
+
+        ▼
+
+Component Preview
+
+        │
+
+Drag Sticker
+
+        ▼
+
+Card Editor
+
+        │
+
+Drop Sticker
+
+        ▼
+
+Sticker becomes part of card
+
+This separates selection from editing, resulting in a cleaner interaction.
+
+5. Revised Editor Layout
+
+The editor becomes two coordinated panels.
+
++---------------------------------------------------------------+
+|                       Inventory                               |
++---------------------------------------------------------------+
+
++--------------------------+------------------------------------+
+| Component Preview        | Card Editor                        |
+|                          |                                    |
+| Explosive                |            Card                    |
+| +30 Damage               |                                    |
+| Explosion Radius +40     |       Drop Sticker Here            |
+|                          |                                    |
+|        Sticker           |                                    |
+|     (drag this)          |                                    |
++--------------------------+------------------------------------+
+
+The player now has clear visual separation between:
+
+Selecting a component
+Inspecting a component
+Editing a card
+6. User Workflow
+
+The complete editing process becomes:
+
+Click Card
+
+↓
+
+Card opens in editor
+
+↓
+
+Click Component
+
+↓
+
+Component preview updates
+
+↓
+
+Drag sticker from preview
+
+↓
+
+Drop sticker on card
+
+↓
+
+Sticker is applied
+
+The interaction closely resembles placing decals or stickers onto a physical trading card.
+
+7. Component Data Structure
+
+Instead of storing only component identifiers,
+
+components = [
+    "explosive",
+    "poison"
+]
+
+each applied component stores its visual placement.
+
+components = [
+    {
+        "id": "explosive",
+        "offset": Vector2(42, -16)
+    },
+    {
+        "id": "poison",
+        "offset": Vector2(-28, 18)
+    }
+]
+
+Each component now records:
+
+component identifier
+sticker position
+
+This allows accurate reconstruction of the card artwork.
+
+8. Rendering
+
+The Card Editor renders:
+
+Card Background
+
+Projectile Artwork
+
+Existing Layer Icons
+
+Applied Component Stickers
+
+Each sticker reads its stored offset and is positioned accordingly.
+
+Sticker.position = component.offset
+
+No additional lookup logic is required.
+
+9. Why Drag From the Component Preview?
+
+Dragging directly from the inventory presents several usability issues.
+
+Inventory entries are typically compact and optimized for browsing rather than interaction.
+
+By introducing a dedicated Component Preview, the player gains access to detailed information before committing to an upgrade.
+
+Advantages include:
+
+Larger sticker artwork that is easier to drag.
+Clear presentation of statistics and descriptions.
+Opportunity to communicate rarity and flavour.
+Reduced accidental component application.
+Consistent interaction pattern with the existing Card Editor.
+
+The Component Preview therefore acts as both an inspection panel and the source of the draggable sticker.
+
+10. Benefits
+Cleaner Separation of Responsibilities
+UI Element	Responsibility
+Inventory	Store and select cards
+Component Inventory	Store and select components
+Component Preview	Display component details and provide draggable sticker
+Card Editor	Display and edit the currently selected card
+
+Each interface now has a single, well-defined purpose.
+
+Improved Maintainability
+
+Editing logic becomes centralized inside the Card Editor instead of being distributed across every inventory card.
+
+This reduces:
+
+signal complexity
+duplicated code
+drag-and-drop handling
+UI synchronization problems
+Better User Experience
+
+The workflow becomes much more intuitive.
+
+Instead of:
+
+Find component
+
+↓
+
+Drag tiny icon
+
+↓
+
+Hope correct card accepts drop
+
+the player performs:
+
+Select component
+
+↓
+
+Read description
+
+↓
+
+Drag large sticker
+
+↓
+
+Place on card
+
+The interaction feels deliberate and mirrors the experience of decorating a collectible card.
+
+Greater Extensibility
+
+This architecture provides a strong foundation for future features, including:
+
+Repositioning stickers after placement.
+Sticker rotation and scaling.
+Component removal by dragging off the card.
+Cosmetic-only stickers and decals.
+Layer ordering.
+Sticker snapping and alignment guides.
+Maximum sticker limits.
+Animated and rare sticker effects.
+
+Because editing is centralized, these features can be implemented without modifying the inventory or loadout systems.
+
+11. Implementation Impact
+System	Required Changes
+Main.gd	Moderate – add Component Preview logic, Card Editor drop handling, and editor synchronization.
+Player.gd	Small – store component offsets and apply components with positional data.
+BulletTypes.gd	Small – expose sticker artwork and component metadata.
+Component Preview	New functionality – display component details and provide draggable sticker.
+Card Editor	Extended – accept sticker drops and render positioned stickers.
+Inventory UI	Minor – components become selectable rather than directly draggable onto cards.
+Loadout UI	No structural changes – continues to select cards for editing.
+Conclusion
+
+The proposed redesign replaces a distributed drag-and-drop system with a centralized editing workflow built around two dedicated interfaces: a Component Preview for inspecting and dragging upgrades, and a Card Editor for applying them.
+
+By separating selection from editing, the interface becomes more intuitive, the implementation becomes significantly easier to maintain, and the system gains a robust foundation for future enhancements such as movable stickers, cosmetic customization, and richer card editing mechanics. This approach aligns the interaction model with the game's collectible-card aesthetic while minimizing unnecessary complexity in the underlying codebase.

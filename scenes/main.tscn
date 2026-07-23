@@ -1,0 +1,166 @@
+[gd_scene format=3 uid="uid://3qbvjnk7id8u"]
+
+[ext_resource type="Script" uid="uid://dj548u2rpbs66" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://brclfl4xcpmva" path="res://scenes/player.tscn" id="2_player"]
+
+[node name="Main" type="Node2D" unique_id=1185383788]
+script = ExtResource("1_main")
+
+[node name="Player" parent="." unique_id=1950472120 instance=ExtResource("2_player")]
+position = Vector2(576, 324)
+
+[node name="SpawnTimer" type="Timer" parent="." unique_id=928080588]
+autostart = true
+
+[node name="Hud" type="CanvasLayer" parent="." unique_id=944878608]
+
+[node name="PortraitFrame" type="Panel" parent="Hud" unique_id=409261888]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 80.0
+offset_bottom = 80.0
+
+[node name="HealthBar" type="ProgressBar" parent="Hud" unique_id=1057174160]
+offset_left = 96.0
+offset_top = 18.0
+offset_right = 356.0
+offset_bottom = 42.0
+value = 100.0
+show_percentage = false
+
+[node name="HealthLabel" type="Label" parent="Hud" unique_id=525926182]
+offset_left = 96.0
+offset_top = 48.0
+offset_right = 256.0
+offset_bottom = 72.0
+theme_override_font_sizes/font_size = 16
+text = "100 / 100"
+
+[node name="AmmoLabel" type="Label" parent="Hud" unique_id=1241340784]
+offset_left = 16.0
+offset_top = 94.0
+offset_right = 120.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 18
+text = "Cards"
+
+[node name="StoredLabel" type="Label" parent="Hud" unique_id=245862151]
+offset_left = 136.0
+offset_top = 96.0
+offset_right = 360.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 14
+text = "Stored this hand: 0"
+
+[node name="CardHand" type="HBoxContainer" parent="Hud" unique_id=93558492]
+offset_left = 16.0
+offset_top = 126.0
+offset_right = 616.0
+offset_bottom = 266.0
+
+[node name="LoadoutTitle" type="Label" parent="Hud" unique_id=1367804345]
+offset_left = 16.0
+offset_top = 284.0
+offset_right = 160.0
+offset_bottom = 310.0
+theme_override_font_sizes/font_size = 16
+text = "Loadout"
+
+[node name="LoadoutGrid" type="GridContainer" parent="Hud" unique_id=992764644]
+offset_left = 16.0
+offset_top = 314.0
+offset_right = 392.0
+offset_bottom = 450.0
+columns = 4
+
+[node name="InventoryTitle" type="Label" parent="Hud" unique_id=1075521119]
+offset_left = 16.0
+offset_top = 468.0
+offset_right = 180.0
+offset_bottom = 494.0
+theme_override_font_sizes/font_size = 16
+text = "Inventory"
+
+[node name="InventoryGrid" type="GridContainer" parent="Hud" unique_id=1432261166]
+offset_left = 16.0
+offset_top = 498.0
+offset_right = 392.0
+offset_bottom = 636.0
+columns = 4
+
+[node name="ComponentTitle" type="Label" parent="Hud" unique_id=589331522]
+offset_left = 416.0
+offset_top = 284.0
+offset_right = 620.0
+offset_bottom = 310.0
+theme_override_font_sizes/font_size = 16
+text = "Components"
+
+[node name="ComponentGrid" type="GridContainer" parent="Hud" unique_id=18807003]
+offset_left = 416.0
+offset_top = 314.0
+offset_right = 792.0
+offset_bottom = 636.0
+columns = 3
+
+[node name="EditorTitle" type="Label" parent="Hud" unique_id=1502299044]
+offset_left = 816.0
+offset_top = 284.0
+offset_right = 1110.0
+offset_bottom = 310.0
+theme_override_font_sizes/font_size = 16
+text = "Card Editor"
+
+[node name="EditorStats" type="Label" parent="Hud" unique_id=1939065451]
+offset_left = 816.0
+offset_top = 314.0
+offset_right = 1110.0
+offset_bottom = 396.0
+theme_override_font_sizes/font_size = 14
+text = "Select a loadout card to edit."
+
+[node name="EditorCardPreview" type="Panel" parent="Hud" unique_id=448973826]
+offset_left = 816.0
+offset_top = 406.0
+offset_right = 1036.0
+offset_bottom = 636.0
+
+[node name="AppliedComponentGrid" type="GridContainer" parent="Hud" unique_id=1298072235]
+offset_left = 1052.0
+offset_top = 406.0
+offset_right = 1110.0
+offset_bottom = 636.0
+
+[node name="DeathPanel" type="Panel" parent="Hud" unique_id=1990926903]
+visible = false
+offset_left = 376.0
+offset_top = 214.0
+offset_right = 776.0
+offset_bottom = 434.0
+
+[node name="DeathTitle" type="Label" parent="Hud/DeathPanel" unique_id=1131022314]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 368.0
+offset_bottom = 78.0
+theme_override_font_sizes/font_size = 28
+text = "Run Ended"
+horizontal_alignment = 1
+
+[node name="DeathText" type="Label" parent="Hud/DeathPanel" unique_id=613742917]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 92.0
+offset_right = 368.0
+offset_bottom = 124.0
+text = "Blank skull art placeholder"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="Hud/DeathPanel" unique_id=465108834]
+layout_mode = 0
+offset_left = 126.0
+offset_top = 150.0
+offset_right = 274.0
+offset_bottom = 190.0
+text = "Another Run"
